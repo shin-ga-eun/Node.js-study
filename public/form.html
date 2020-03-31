@@ -11,6 +11,8 @@
         </form>
 
         <button class="ajaxsend">ajaxsend</button>
+    
+        <div class="result"></div>
 
 
         <script>
@@ -31,10 +33,10 @@
                 xhr.send(data);
 
                 xhr.addEventListener('load', function(){
-                    // var result = JSON.parse(xhr.responseText);
+                    var result = JSON.parse(xhr.responseText);
 
-                    // if(result.result !=="ok") return;
-                    // document.querySelector(".result").innerHTML = result.email;
+                    if(result.result !=="ok") return;
+                    document.querySelector(".result").innerHTML = result.email;
                 });
             }
         </script>

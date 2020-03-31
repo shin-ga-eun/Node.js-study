@@ -30,6 +30,7 @@ app.post('/email_post', function(req, res){
 });
 
 app.post('/ajax_send_email', function (req,res) {
+    //check validation about input value => selelct db
     var responseData = {'result' : 'ok', 'email' : req.body.email}
     res.json(responseData)
 });
