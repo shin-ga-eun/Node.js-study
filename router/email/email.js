@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
     port: 3306,
     user: 'root',
     password: '1234',
-    database: 'inflearndb'
+    database: 'inflearn'
 })
 
 connection.connect()
