@@ -19,9 +19,22 @@ connection.connect()
 
 //GET
 router.get('/', function(req, res){
-    console.log("get join url");
-    res.render('join.ejs');
+    var msg;
+    var errMsg = req.flash('error')
+    if(errMsg) msg = errMsg;
+    res.render('join.ejs', {'message': msg});
 });
+
+//serializer - done false가 아닌 경우 사용
+passport.serializeUser(function(user, done) {
+    console.log('passport session save : ', user.id)
+    done(null, user.id);
+});
+//deserializeUser - session에서 id를 뽑아서 전달
+passport.deserializeUser(function(id, done){
+    console.log('passport session get id : ', id)
+    done(null, id);
+})
 
 //local-join Strategy 생성
 passport.use('local-join', new LocalStrategy({
@@ -29,7 +42,20 @@ passport.use('local-join', new LocalStrategy({
         passwordField: 'password',
         passReqToCallback: true
     }, function(req,email,password, done){
-        console.log('local-join callback called');
+        var query = connection.query('select * from user where email=?', [email], function(err,rows){
+            if(err) return done(err);
+
+            if(rows.length){
+                console.log('existed user')
+                return done(null, false, {message: 'your email is already userd'}) //오류처리
+            } else {
+                var sql = {email: email, pw: password};
+                var query = connection.query('insert into user set ?', sql, function(err, rows){
+                    if(err) throw err
+                    return done(null, {'email' : email, 'id' : rows.insertId});
+                })
+            }
+        })
     }
 ));
 

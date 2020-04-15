@@ -2,10 +2,16 @@
 <html>
     <head>
         <title>Join !</title>
+        <style>
+            .messages{
+                color : #963b3b;
+                margin-bottm: 16px;
+            }
+        </style>
     </head>
     <body>
         <h1>Join my website!</h1>
-        <section class="messages"></section>
+        <section class="messages"> <%= message %> </section>
         <form action="/join" method="post">
         email : <input type="text" name="email"><br>
         password : <input type="text" name="password"><br>
