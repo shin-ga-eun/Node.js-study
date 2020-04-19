@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
-//GET
+//flash message 처리 
 router.get('/', function(req, res){
     var msg;
     var errMsg = req.flash('error')
@@ -25,30 +25,32 @@ router.get('/', function(req, res){
     res.render('join.ejs', {'message': msg});
 });
 
+/* session 을 저장하는 처리부분 start */
 //serializer - done false가 아닌 경우 사용
 passport.serializeUser(function(user, done) {
     console.log('passport session save : ', user.id)
     done(null, user.id);
 });
-//deserializeUser - session에서 id를 뽑아서 전달
+//deserializeUser - session에서 id를 뽑아서 처리 
 passport.deserializeUser(function(id, done){
     console.log('passport session get id : ', id)
     done(null, id);
 })
+/* session 을 저장하는 처리부분 end */
 
 //local-join Strategy 생성
 passport.use('local-join', new LocalStrategy({
-        usernameField: 'email',
+        usernameField: 'email', //ejs form name
         passwordField: 'password',
         passReqToCallback: true
-    }, function(req,email,password, done){
+    }, function (req, email, password, done){
         var query = connection.query('select * from user where email=?', [email], function(err,rows){
             if(err) return done(err);
 
-            if(rows.length){
+            if(rows.length){ //오류처리
                 console.log('existed user')
-                return done(null, false, {message: 'your email is already userd'}) //오류처리
-            } else {
+                return done(null, false, {message: 'your email is already used'}) 
+            } else { //정상처리 
                 var sql = {email: email, pw: password};
                 var query = connection.query('insert into user set ?', sql, function(err, rows){
                     if(err) throw err
@@ -59,7 +61,7 @@ passport.use('local-join', new LocalStrategy({
     }
 ));
 
-//routing
+//passport 기반 router 설정 
 router.post('/', passport.authenticate('local-join', {
         successRedirect: '/main',
         failureRedirect: '/join',
