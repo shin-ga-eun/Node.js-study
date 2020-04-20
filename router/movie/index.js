@@ -90,9 +90,9 @@ router.delete('/:title', function (req ,res) {
     
 })
 
-// 5. /movie/:title, PATCH
+// 5. /movie/:title, PUT
 /*
-PATCH에서 req.body에 undefined되는 오류 미해결..
+PUT에서 req.body에 undefined되는 오류 미해결..
 
 */
 router.put('/:title', function(req, res){
