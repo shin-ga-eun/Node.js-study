@@ -1,4 +1,4 @@
-# node-lecture
+# node.js-study
 Node.js study- 노드를 이용한 RESTAPI서버구현
 
 ## 참고
